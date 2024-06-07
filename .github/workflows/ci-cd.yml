@@ -9,6 +9,7 @@ on:
 
 jobs:
   release:
+    permissions: write-all
     runs-on: ubuntu-latest
     outputs:
       VERSION: ${{ steps.getversion.outputs.version }}
