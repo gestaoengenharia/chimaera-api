@@ -6,7 +6,7 @@ const timestamp = new Date()
 module.exports = {
   branches: [
     { name: "main", channel: "latest" },
-    { name: "develop", channel: "nightly", prerelease: `nightly-${timestamp}` },
+    { name: "dev", channel: "nightly", prerelease: `nightly-${timestamp}` },
   ],
   repositoryUrl: "https://github.com/paschendale/chimaera-api",
   plugins: [

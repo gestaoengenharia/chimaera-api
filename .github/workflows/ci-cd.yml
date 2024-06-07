@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - develop
+      - dev
       - pipeline
 
 jobs:
@@ -55,4 +55,4 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USER }}/chimaera-api:${{ needs.release.outputs.VERSION }}
-            ${{ secrets.DOCKERHUB_USER }}/chimaera-api:${{ github.ref == 'refs/heads/main' && 'stable' || 'latest' }}
+            ${{ secrets.DOCKERHUB_USER }}/chimaera-api:${{ github.ref == 'refs/heads/main' && 'latest' || 'nightly' }}
