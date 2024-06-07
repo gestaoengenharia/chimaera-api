@@ -1,7 +1,7 @@
 {
   "name": "chimaera-api",
   "version": "1.0.0",
-  "description": "API para o Chimaera Analytics",
+  "description": "Chimaera Geoanalytics API",
   "main": "dist/server.js",
   "scripts": {
     "start": "ts-node-dev src/server.ts",
