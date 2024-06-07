@@ -8,7 +8,7 @@ module.exports = {
     { name: "main", channel: "latest" },
     { name: "dev", channel: "nightly", prerelease: `nightly-${timestamp}` },
   ],
-  repositoryUrl: "https://github.com/paschendale/chimaera-api",
+  repositoryUrl: "https://github.com/gestaoengenharia/chimaera-api",
   plugins: [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
