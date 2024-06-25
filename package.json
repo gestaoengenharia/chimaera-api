@@ -1,7 +1,7 @@
 {
-  "name": "chimaera-api",
+  "name": "libelula-api",
   "version": "1.0.0",
-  "description": "Chimaera Geoanalytics API",
+  "description": "Libelula Geoanalytics API",
   "main": "dist/server.js",
   "scripts": {
     "start": "ts-node-dev src/server.ts",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gestaoengenharia/chimaera-api.git"
+    "url": "git+https://github.com/paschendale/libelula-api.git"
   },
   "author": "Victor Marotta <victordossantosmarotta@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gestaoengenharia/chimaera-api/issues"
+    "url": "https://github.com/paschendale/libelula-api/issues"
   },
-  "homepage": "https://github.com/gestaoengenharia/chimaera-api#readme",
+  "homepage": "https://github.com/paschendale/libelula-api#readme",
   "devDependencies": {
     "@types/apicache": "^1.6.6",
     "@types/cors": "^2.8.17",

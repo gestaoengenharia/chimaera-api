@@ -1,6 +1,6 @@
 services:
   api:
-    image: paschendale/chimaera-api
+    image: paschendale/libelula-api
     build: .
     restart: always
     ports:

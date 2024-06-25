@@ -26,7 +26,7 @@ app.use(
   "/docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerDoc, {
-    customSiteTitle: "Swagger | API Chimaera - Topocart",
+    customSiteTitle: "Swagger | API Libelula - Topocart",
     swaggerOptions: {
       persistAuthorization: true,
     },
@@ -41,7 +41,7 @@ app.get("/swagger.json", (req, res) => {
 app.use("/", router);
 
 app.listen(Number(PORT), "0.0.0.0", async () => {
-  figlet("API Chimaera", function (err, data) {
+  figlet("API Libelula", function (err, data) {
     console.log(
       `################################################################################################################`
     );
