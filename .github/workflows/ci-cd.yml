@@ -55,5 +55,5 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USER }}/chimaera-api:${{ needs.release.outputs.VERSION }}
-            ${{ secrets.DOCKERHUB_USER }}/chimaera-api:${{ github.ref == 'refs/heads/main' && 'latest' || 'nightly' }}
+            ${{ secrets.DOCKERHUB_USER }}/libelula-api:${{ needs.release.outputs.VERSION }}
+            ${{ secrets.DOCKERHUB_USER }}/libelula-api:${{ github.ref == 'refs/heads/main' && 'latest' || 'nightly' }}
