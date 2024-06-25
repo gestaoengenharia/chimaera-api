@@ -13,9 +13,9 @@ const doc = {
       description: "API Local",
     },
   ],
-  host: "api.chimaera.gestaoengenharia.dev.br",
+  host: "api.libelula.gestaoengenharia.dev.br",
   externalDocs: {
-    description: "api.chimaera.gestaoengenharia.dev.br/swagger.json",
+    description: "api.libelula.gestaoengenharia.dev.br/swagger.json",
     url: "/swagger.json",
   },
   schemes: ["http"],
