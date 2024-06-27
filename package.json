@@ -1,6 +1,6 @@
 {
   "name": "libelula-api",
-  "version": "1.0.0",
+  "version": "1.0.0-nightly-20240627T201023.1",
   "description": "Libelula Geoanalytics API",
   "main": "dist/server.js",
   "scripts": {
