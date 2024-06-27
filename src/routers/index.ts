@@ -1,4 +1,5 @@
 import express from "express";
+import { proxyTiles } from "../controllers/tiles";
 
 const router = express.Router();
 
@@ -6,5 +7,8 @@ const router = express.Router();
 router.get("/health", async (req, res) => {
   await res.json({ alive: true });
 });
+
+/* Rotas de proxy */
+router.get("/tiles/*", proxyTiles);
 
 export default router;

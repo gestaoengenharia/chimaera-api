@@ -42,12 +42,8 @@ app.use("/", router);
 
 app.listen(Number(PORT), "0.0.0.0", async () => {
   figlet("API Libelula", function (err, data) {
-    console.log(
-      `################################################################################################################`
-    );
+    console.log(``);
     console.log(data);
-    console.log(
-      `####################################### Iniciada na porta ${PORT} ################################################ \n`
-    );
+    console.log(`                Iniciada na porta ${PORT}  \n`);
   });
 });

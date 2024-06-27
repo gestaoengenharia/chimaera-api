@@ -18,6 +18,7 @@ const envSchema = z.object({
       message: "PORT must be a valid number",
     })
     .optional(),
+  API_TILES_URL: z.string(),
 });
 
 const env = envSchema.safeParse(process.env);
