@@ -1,6 +1,5 @@
 import { z } from "zod";
 import bairros from "../mocks/bairros";
-import focos from "../mocks/focos";
 import client from "../repositories/db";
 import { statsSchema } from "../schema/stats";
 
@@ -26,7 +25,7 @@ export default async function statsServicePontenova(
         SELECT 
           DATE(data) AS dia, 
           COUNT(*) AS focos_por_dia,
-          TO_CHAR(data, 'YYYY-MM') AS mes
+          TO_CHAR(data, 'MM') AS mes
         FROM data.focos
         WHERE geom && ST_MakeEnvelope($3, $4, $5, $6, 4326)
         GROUP BY dia, mes
@@ -59,15 +58,27 @@ export default async function statsServicePontenova(
         GROUP BY mes
         ORDER BY total_focos_mes DESC
         LIMIT 1
+      ),
+      acumulado_focos AS (
+        SELECT 
+          generate_series($1::date, $2::date, '1 day'::interval) AS dia
       )
       SELECT
-        focos_corrente.total_focos_corrente AS total_focos,
-        media_focos.media_focos_dia,
-        (focos_corrente.total_focos_corrente - focos_anterior.total_focos_ano_anterior) AS aumento,
-        (focos_corrente.total_focos_corrente - focos_anterior.total_focos_ano_anterior) * 100.0 / focos_anterior.total_focos_ano_anterior AS aumento_percentual,
-        mes_maior_focos.mes AS mes_com_mais_focos,
-        mes_maior_focos.total_focos_mes AS total_focos_mes
-      FROM focos_corrente, focos_anterior, media_focos, mes_maior_focos;
+        COALESCE(focos_corrente.total_focos_corrente, 0) AS total_focos,
+        COALESCE(media_focos.media_focos_dia, 0) AS media_focos_dia,
+        COALESCE(focos_corrente.total_focos_corrente, 0) - COALESCE(focos_anterior.total_focos_ano_anterior, 0) AS aumento,
+        (COALESCE(focos_corrente.total_focos_corrente, 0) - COALESCE(focos_anterior.total_focos_ano_anterior, 0)) * 100.0 / (COALESCE(focos_anterior.total_focos_ano_anterior, 0) + 1) AS aumento_percentual,
+        COALESCE(mes_maior_focos.mes, 'N/A') AS mes_com_mais_focos,
+        COALESCE(mes_maior_focos.total_focos_mes, 0) AS total_focos_mes,
+        acumulado_focos.dia AS acumulado_dia,
+        COALESCE(SUM(focos_periodo.focos_por_dia) OVER (ORDER BY acumulado_focos.dia), 0) AS acumulado
+      FROM acumulado_focos
+      LEFT JOIN focos_periodo ON acumulado_focos.dia = focos_periodo.dia
+      LEFT JOIN focos_corrente ON TRUE
+      LEFT JOIN focos_anterior ON TRUE
+      LEFT JOIN media_focos ON TRUE
+      LEFT JOIN mes_maior_focos ON TRUE
+      ORDER BY acumulado_focos.dia;
     `;
 
     const result = await db.query(combinedQuery, [
@@ -81,7 +92,19 @@ export default async function statsServicePontenova(
       endDateLastYear,
     ]);
 
-    const stats = result.rows[0];
+    const stats = result.rows[0] || {
+      total_focos: 0,
+      media_focos_dia: 0,
+      aumento: 0,
+      aumento_percentual: 0,
+      mes_com_mais_focos: "N/A",
+      total_focos_mes: 0,
+    };
+
+    const focos = result.rows.map((row) => [
+      new Date(row.acumulado_dia).getTime(),
+      parseInt(row.acumulado),
+    ]);
 
     return {
       meta: params,
@@ -97,6 +120,18 @@ export default async function statsServicePontenova(
       },
     };
   } catch (error) {
-    throw error;
+    return {
+      meta: params,
+      bairros: bairros,
+      focos: [],
+      stats: {
+        totalFocos: 0,
+        mediaFocos: 0,
+        aumentoMesmoPeriodoPerc: 0,
+        aumentoMesmoPeriodoQtde: 0,
+        mesComMaiorNumero: "N/A",
+        mesComMaiorNumeroQtde: 0,
+      },
+    };
   }
 }

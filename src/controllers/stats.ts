@@ -8,11 +8,13 @@ export default async function statsController(req: Request, res: Response) {
 
     if (!data.success) {
       res.status(422).json({ error: data.error });
+      return;
     }
 
     const result = await statsServicePontenova(data.data!);
 
     res.send(result);
+    return
   } catch (error) {
     res.status(500).json({ error });
   }
