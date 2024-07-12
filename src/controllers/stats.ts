@@ -2,13 +2,18 @@ import { Request, Response } from "express";
 import { statsSchema } from "../schema/stats";
 import bairros from "../mocks/bairros";
 import focos from "../mocks/focos";
+import statsServicePontenova from "../services/stats";
 
-export default function statsController(req: Request, res: Response) {
-  const data = statsSchema.safeParse(req.params);
+export default async function statsController(req: Request, res: Response) {
+  try {
+    const data = statsSchema.safeParse(req.params);
 
-  if (data.success) {
-    res.send({ meta: data.data, bairros: bairros, focos: focos });
-  } else {
-    res.status(422).json({ error: data.error });
-  }
+    if (!data.success) {
+      res.status(422).json({ error: data.error });
+    }
+
+    const result = await statsServicePontenova(data.data!);
+
+    res.send(result);
+  } catch (error) {}
 }
