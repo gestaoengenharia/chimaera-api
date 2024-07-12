@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { statsSchema } from "../schema/stats";
-import bairros from "../mocks/bairros";
-import focos from "../mocks/focos";
 import statsServicePontenova from "../services/stats";
 
 export default async function statsController(req: Request, res: Response) {
@@ -15,5 +13,7 @@ export default async function statsController(req: Request, res: Response) {
     const result = await statsServicePontenova(data.data!);
 
     res.send(result);
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 }
