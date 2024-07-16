@@ -1,5 +1,4 @@
 import { z } from "zod";
-import bairros from "../mocks/bairros";
 import client from "../repositories/db";
 import { statsSchema } from "../schema/stats";
 
@@ -106,9 +105,48 @@ export default async function statsServicePontenova(
       parseInt(row.acumulado),
     ]);
 
+    const setoresFocosQuery = `
+      SELECT 
+        "nome" AS name,
+        COUNT(*) AS value
+      FROM data.focos f
+      JOIN data.setores_censitarios sc ON ST_Contains(sc.geom, f.geom)
+      WHERE f.data BETWEEN $1 AND $2
+      AND sc.geom && ST_MakeEnvelope($3, $4, $5, $6, 4326)
+      GROUP BY "nome"
+      ORDER BY value DESC
+    `;
+
+    const setoresResult = await db.query(setoresFocosQuery, [
+      params.start,
+      params.end,
+      params.swX,
+      params.swY,
+      params.neX,
+      params.neY,
+    ]);
+
+    // Process the setores result to get the top 9 and consolidate others
+    const setoresCensitarios = setoresResult.rows
+      .map((row) => ({
+        name: row.name,
+        value: parseInt(row.value),
+      }))
+      .sort((a, b) => b.value - a.value); // Sort in descending order
+
+    const topSetores = setoresCensitarios.slice(0, 9);
+    const otherSetores = setoresCensitarios.slice(9);
+
+    const consolidatedOtherSetores = {
+      name: "Outros",
+      value: otherSetores.reduce((sum, setor) => sum + setor.value, 0),
+    };
+
+    const finalSetores = [...topSetores, consolidatedOtherSetores];
+
     return {
       meta: params,
-      bairros: bairros,
+      setores: finalSetores,
       focos: focos,
       stats: {
         totalFocos: stats.total_focos,
@@ -123,7 +161,7 @@ export default async function statsServicePontenova(
     return {
       error: error,
       meta: params,
-      bairros: bairros,
+      setores: [],
       focos: [],
       stats: {
         totalFocos: 0,
