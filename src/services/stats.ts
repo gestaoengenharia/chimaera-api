@@ -121,6 +121,7 @@ export default async function statsServicePontenova(
     };
   } catch (error) {
     return {
+      error: error,
       meta: params,
       bairros: bairros,
       focos: [],
