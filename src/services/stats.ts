@@ -134,8 +134,8 @@ export default async function statsServicePontenova(
       }))
       .sort((a, b) => b.value - a.value); // Sort in descending order
 
-    const topSetores = setoresCensitarios.slice(0, 9);
-    const otherSetores = setoresCensitarios.slice(9);
+    const topSetores = setoresCensitarios.slice(0, 4);
+    const otherSetores = setoresCensitarios.slice(5);
 
     const consolidatedOtherSetores = {
       name: "Outros",
